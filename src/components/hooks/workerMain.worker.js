@@ -10,6 +10,6 @@ export const variance = (data) => {
 self.addEventListener('message', ({ data: { data }}) => {
   let out = variance(data)
   // 模拟大量运算
-  for (let i = 0; i < 100; i ++) out = variance(data)
+  for (let i = 0; i < 1000; i ++) out = variance(data)
   self.postMessage({ data: out })
 })

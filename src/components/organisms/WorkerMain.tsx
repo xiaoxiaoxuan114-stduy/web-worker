@@ -25,7 +25,7 @@ const WorkerMain: React.FC = () => {
     setLeft('计算中...')
     let ave: number = variance(tableData.flat())
     // 模拟大量运算
-    for (let i: number = 0; i < 100; i++ ) {
+    for (let i: number = 0; i < 1000; i++ ) {
       ave = variance(tableData.flat())
     }
     setLeft(ave.toString())

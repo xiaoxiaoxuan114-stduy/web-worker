@@ -1,4 +1,4 @@
-import WebWorker from 'web-worker'
+// import WebWorker from 'web-worker'
 
 const tdList = (): number[] => {
   const out: number[] = []
@@ -16,8 +16,8 @@ export const trList = (): number[][] => {
   return out
 }
 
-export const worker = typeof window !== 'undefined' ?
-  new WebWorker(
+export const worker = typeof window !== 'undefined' && window.Worker ?
+  new Worker(
     new URL('@/components/hooks/workerMain.worker.js', import.meta.url),
     { type: 'module' }
   ) :

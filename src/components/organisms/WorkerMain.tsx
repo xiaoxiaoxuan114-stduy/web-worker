@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import { trList, worker, variance } from '../hooks/workerMain'
+import { trList, variance } from '../hooks/workerMain'
 
 const WorkerMain: React.FC = () => {
   const [tableData, setTableData] = useState<number[][]>([])
   const [left, setLeft] = useState<string>('无')
   const [right, setRight] = useState<string>('无')
+  const [worker, setWorker] = useState<Worker | null>()
   
   useEffect(() => {
+    // 初始化worker线程
+    setWorker(typeof window !== 'undefined' && window.Worker ?
+      new Worker(
+        new URL('@/components/hooks/workerMain.worker.js', import.meta.url),
+        { type: 'module' }
+      ) :
+      null)
     // 初始化列表数据(>10k)
     setTableData(trList())
     return () => {
+      // 销毁worker线程
+      worker?.terminate()
     }
   }, [])
   

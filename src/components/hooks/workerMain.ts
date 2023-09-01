@@ -16,14 +16,6 @@ export const trList = (): number[][] => {
   return out
 }
 
-export const worker = typeof window !== 'undefined' && window.Worker ?
-  new Worker(
-    new URL('@/components/hooks/workerMain.worker.js', import.meta.url),
-    { type: 'module' }
-  ) :
-  null
-
-
 export const average = (data: number[]) => {
   return data.reduce((acc, val) => acc + val, 0) / data.length
 }

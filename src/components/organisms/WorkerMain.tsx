@@ -15,6 +15,9 @@ const WorkerMain: React.FC = () => {
         { type: 'module' }
       ) :
       null)
+    worker?.addEventListener('message', ({ data: { data }}: any) => {
+      setRight(data.toString())
+    })
     // 初始化列表数据(>10k)
     setTableData(trList())
     return () => {
@@ -25,9 +28,6 @@ const WorkerMain: React.FC = () => {
   
   const useWebWorker = () => {
     setRight('计算中...')
-    worker?.addEventListener('message', ({ data: { data }}: any) => {
-      setRight(data.toString())
-    })
     worker?.postMessage({ data: tableData.flat() })
   }
   

@@ -15,18 +15,22 @@ const WorkerMain: React.FC = () => {
         { type: 'module' }
       ) :
       null)
-    worker?.addEventListener('message', ({ data: { data }}: any) => {
-      setRight(data.toString())
-    })
     // 初始化列表数据(>10k)
     setTableData(trList())
     return () => {
+      // 销毁worker监听事件
+      worker?.removeEventListener('message', workerListener)
       // 销毁worker线程
       worker?.terminate()
     }
   }, [])
   
+  const workerListener = ({ data: { data }}: any) => {
+    setRight(data.toString())
+  }
+  
   const useWebWorker = () => {
+    worker?.addEventListener('message', workerListener)
     setRight('计算中...')
     worker?.postMessage({ data: tableData.flat() })
   }

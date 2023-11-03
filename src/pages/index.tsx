@@ -1,33 +1,34 @@
-import React, { useEffect, useRef, useState } from 'react'
-import moment from 'moment'
-import WorkerMain from '@/components/organisms/WorkerMain'
+import React, { useState, useEffect } from 'react'
 
-const Home: React.FC = () => {
-  const [date, setDate] = useState(new Date())
-  const timeShow = useRef<HTMLDivElement>(null)
-  
-  // 初始化
+const Havefun: React.FC = () => {
+  const [worker, setWorker] = useState<Worker | null>()
   useEffect(() => {
-    // 时间（证明当前页面没有出现卡顿）
-    const interval = setInterval(() => {
-      setDate(new Date())
-    }, 1000)
+    // 如果使用next框架的话，请注意区分node和browser环境，下面是next的例子
+    setWorker(typeof window !== 'undefined' && window.Worker ?
+        new Worker(
+          new URL('@/components/hooks/workerMain.worker.js', import.meta.url),
+          { type: 'module' }
+        ) :
+        null)
     return () => {
-      clearInterval(interval)
+      // 销毁事件
+      worker?.removeEventListener('message', workerListener)
+      // 销毁worker线程
+      worker?.terminate()
     }
   }, [])
   
-  useEffect(() => {
-    if (timeShow.current)
-      timeShow.current.innerText = moment(date).format('YYYY-MM-DD hh:mm:ss')
-  }, [date]);
+  // worker 返回事件，便于注册和销毁
+  const workerListener = ({ data }: any) => {
+    console.log(data)
+  }
   
-  return (
-    <main className={`h-screen min-h-[900px]`}>
-      <div ref={timeShow} className={'h-[5%] text-center font-bold text-2xl'} />
-      <WorkerMain />
-    </main>
-  )
+  const useWorker = () => {
+    worker?.addEventListener('message', workerListener)
+    worker?.postMessage('hello, this is main thread')
+  }
+  return (<button onClick={useWorker}>call web-worker</button>)
 }
 
-export default Home
+Havefun.displayName = 'Havefun'
+export default Havefun

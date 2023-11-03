@@ -1,15 +1,15 @@
-const average = (data) => {
-  return data.reduce((acc, val) => acc + val, 0) / data.length
-}
-
-export const variance = (data) => {
-  const averageNum = average(data)
-  return data.map(item => ((item - averageNum) ** 2)).reduce((acc, val) => acc + val, 0) / data.length
-}
-
-self.addEventListener('message', ({ data: { data }}) => {
-  let out = variance(data)
-  // 模拟大量运算
-  for (let i = 0; i < 1000; i ++) out = variance(data)
-  self.postMessage({ data: out })
+// importScripts("https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+// importScripts('axios.js')
+importScripts('/static/axios.js')
+self.addEventListener('message', ({ data }) => {
+  axiosTest()
+  console.log(data)
+  self.postMessage('hello, this is worker thread')
 })
+
+const axiosTest = () => {
+  axios.get('https://10.167.36.36/monitor/api/statistics/qd/cloud/top_n/')
+    .then(({ data }) => {
+      console.log(data)
+    })
+}
